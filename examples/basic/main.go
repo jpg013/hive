@@ -1,27 +1,44 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"os"
-	"path/filepath"
 
-	"github.com/jpg013/hive/config"
+	"github.com/Code-Pundits/go-config"
+	logging "github.com/Code-Pundits/go-logger"
+	"github.com/jpg013/hive"
 )
 
 func main() {
-	ex, err := os.Executable()
-	if err != nil {
-		panic(err)
-	}
-	cfgPath := filepath.Join(filepath.Dir(ex), "examples", "basic", "config.json")
-	cfgFile := flag.String("c", cfgPath, "Path to the configuration filename")
-	flag.Parse()
+	logger := logging.NewLogger()
+	cfg, _ := config.NewParser().Parse("./examples/basic/config.json")
 
-	parser := config.NewParser()
-	serviceCfg, err := parser.Parse(*cfgFile)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(serviceCfg)
+	// Create new hive instance
+	h := hive.New(logger, cfg)
+
+	h.LoadConfig("./examples/basic/config.json")
+
+	// h.RegisterEndpoint(&hive.Endpoint{
+	// 	Endpoint: "/authenticate",
+	// 	Method:   "POST",
+	// 	Backends: []*hive.Backend{{
+	// 		Scheme: "http",
+	// 		Method: "POST",
+	// 		Host:   "127.0.0.1:9001",
+	// 		Path:   "/auth",
+	// 	}},
+	// })
+
+	// h.RegisterEndpoint(&hive.Endpoint{
+	// 	Endpoint: "/hash_password",
+	// 	Method:   "POST",
+	// 	Backends: []*hive.Backend{{
+	// 		Scheme: "http",
+	// 		Method: "POST",
+	// 		Host:   "127.0.0.1:9001",
+	// 		Path:   "/password/hash",
+	// 	}},
+	// })
+
+	err := h.RunServer()
+	fmt.Println(err)
 }

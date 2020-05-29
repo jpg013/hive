@@ -1,4 +1,19 @@
 {
-  "host": "127.0.0.1",
-  "port": 8080
+  "service": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "debug": true
+  },
+  "endpoints": [
+    {
+      "endpoint": "/authenticate",
+      "method": "POST",
+      "backends": [{
+        "scheme": "http",
+			  "method": "POST",
+			  "host":   "127.0.0.1:9001",
+			  "path":   "/auth"
+      }]
+    }
+  ]
 }
