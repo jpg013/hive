@@ -16,7 +16,7 @@ var httpAllowedStatusCodes map[uint]bool = map[uint]bool{
 type HTTPResponseError struct {
 	Code int    `json:"http_status_code"`
 	Msg  string `json:"http_body,omitempty"`
-	name string
+	name string `json:"name"`
 }
 
 // Error returns the error message

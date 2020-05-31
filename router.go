@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Code-Pundits/go-config"
 	logging "github.com/Code-Pundits/go-logger"
 	"github.com/labstack/echo/v4"
 )
@@ -12,7 +13,7 @@ import (
 // Router defines the router interface
 type Router interface {
 	middleware(...echo.MiddlewareFunc)
-	endpoint(*EndpointConfig)
+	endpoint(config.EndpointConfig)
 	handler() http.Handler
 }
 
@@ -29,7 +30,7 @@ func (r *httpRouter) middleware(fns ...echo.MiddlewareFunc) {
 	}
 }
 
-func (r *httpRouter) endpoint(e *EndpointConfig) {
+func (r *httpRouter) endpoint(e config.EndpointConfig) {
 	method := strings.ToTitle(e.Method)
 
 	switch method {

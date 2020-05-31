@@ -10,7 +10,7 @@ import (
 // Hive is the shitz
 type Hive interface {
 	RunServer() error
-	RegisterEndpoint(*EndpointConfig)
+	RegisterEndpoint(config.EndpointConfig)
 	LoadConfig(string) error
 }
 
@@ -22,12 +22,15 @@ type hive struct {
 }
 
 func (h *hive) LoadConfig(path string) error {
-	cfg, err := NewParser().Parse(path)
+	cfg, err := config.NewParser().Parse(path)
 
 	if err != nil {
-		return nil
+		return err
 	}
 
+	h.config = cfg
+
+	// Register each endpoint with config
 	for _, endpoint := range cfg.Endpoints {
 		h.RegisterEndpoint(endpoint)
 	}
@@ -39,13 +42,13 @@ func (h *hive) RunServer() error {
 	return RunServer(context.Background(), h.config.ServiceConfig, h.router.handler())
 }
 
-func (h *hive) RegisterEndpoint(e *EndpointConfig) {
+func (h *hive) RegisterEndpoint(e config.EndpointConfig) {
 	h.router.endpoint(e)
 }
 
 // New returns a Hive implementation
-func New(logger logging.Logger, config config.Configuration) Hive {
+func New(logger logging.Logger) Hive {
 	router := NewRouter(logger)
 
-	return &hive{config, router, logger}
+	return &hive{logger: logger, router: router}
 }

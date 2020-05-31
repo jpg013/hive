@@ -6,13 +6,13 @@
   },
   "endpoints": [
     {
-      "endpoint": "/authenticate",
+      "endpoint": "/password/hash",
       "method": "POST",
       "backends": [{
         "scheme": "http",
 			  "method": "POST",
 			  "host":   "127.0.0.1:9001",
-			  "path":   "/auth"
+			  "path":   "/password/hash"
       }]
     }
   ]
