@@ -12,14 +12,14 @@ import (
 )
 
 // Proxy processes a request in a given context and returns a response and an error
-type Proxy func(request *Request) (*Response, error)
+type Proxy func(request *ProxyRequest) (*ProxyResponse, error)
 
 var (
 	errNoBackend = errors.New("Endpoint must have at least 1 backend")
 )
 
 func multiProxyFactory(remotes []*config.BackendConfig) Proxy {
-	return func(req *Request) (*Response, error) {
+	return func(req *ProxyRequest) (*ProxyResponse, error) {
 		var wait sync.WaitGroup
 		proxyResponse := NewResponse()
 
@@ -75,7 +75,7 @@ func multiProxyFactory(remotes []*config.BackendConfig) Proxy {
 func singleProxyFactory(remote *config.BackendConfig) Proxy {
 	group := remote.Group
 
-	return func(req *Request) (*Response, error) {
+	return func(req *ProxyRequest) (*ProxyResponse, error) {
 		httpResp, err := httpClient.Do(buildRemoteRequest(remote, req))
 
 		if err != nil {
@@ -84,7 +84,7 @@ func singleProxyFactory(remote *config.BackendConfig) Proxy {
 
 		defer httpResp.Body.Close()
 		if err = HTTPStatusHandler(httpResp); err != nil {
-			return &Response{
+			return &ProxyResponse{
 				Status: httpResp.StatusCode,
 				Errors: map[string]string{group: err.Error()},
 			}, nil

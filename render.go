@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Render func(echo.Context, *Response) error
+type Render func(echo.Context, *ProxyResponse) error
 
 var emptyResponse interface{}
 
@@ -31,7 +31,7 @@ func getRender(cfg *config.EndpointConfig) Render {
 	return fallback
 }
 
-func jsonRender(c echo.Context, response *Response) error {
+func jsonRender(c echo.Context, response *ProxyResponse) error {
 	if response == nil {
 		return c.JSON(defaultHTTPStatus, emptyResponse)
 	}

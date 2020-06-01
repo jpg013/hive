@@ -12,10 +12,11 @@ import (
 
 const requestParamsAsterisk string = "*"
 
-type RequestGeneratorFunc func(c echo.Context) *Request
+// RequestGeneratorFunc takes a context and creates a new ProxyRequest
+type RequestGeneratorFunc func(c echo.Context) *ProxyRequest
 
-// Request contains the data to send to the backend
-type Request struct {
+// ProxyRequest contains the data to send to the remote backend
+type ProxyRequest struct {
 	Method  string
 	Body    io.ReadCloser
 	Params  map[string]string
@@ -24,11 +25,12 @@ type Request struct {
 	URL     *url.URL
 }
 
-func NewRequest(c echo.Context) *Request {
+// NewRequest takes a context and creates a new ProxyRequest
+func NewRequest(c echo.Context) *ProxyRequest {
 	req := c.Request()
 
 	// httpReq.Header
-	return &Request{
+	return &ProxyRequest{
 		Method:  req.Method,
 		Body:    cloneRequestBody(req),
 		Headers: cloneRequestHeaders(req),

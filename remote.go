@@ -8,7 +8,7 @@ import (
 	"github.com/Code-Pundits/go-config"
 )
 
-func buildRawQuery(remote *config.BackendConfig, r *Request) string {
+func buildRawQuery(remote *config.BackendConfig, r *ProxyRequest) string {
 	if len(remote.Query) > 0 {
 		params := url.Values{}
 		for _, key := range remote.Query {
@@ -23,7 +23,7 @@ func buildRawQuery(remote *config.BackendConfig, r *Request) string {
 
 // Copy over any specified headers from Request to Backend.
 // If the backend request headers is not specified, copy default headers
-func copyRemoteHeaders(remote *config.BackendConfig, r *Request) map[string][]string {
+func copyRemoteHeaders(remote *config.BackendConfig, r *ProxyRequest) map[string][]string {
 	if len(remote.HeadersToSend) == 0 {
 		remote.HeadersToSend = defaultHeadersToSend
 	}
@@ -51,7 +51,7 @@ func copyRemoteHeaders(remote *config.BackendConfig, r *Request) map[string][]st
 	return headers
 }
 
-func buildRemoteRequest(remote *config.BackendConfig, r *Request) *http.Request {
+func buildRemoteRequest(remote *config.BackendConfig, r *ProxyRequest) *http.Request {
 	reqURL := url.URL{
 		Scheme:   remote.Scheme,
 		Host:     remote.Host,
