@@ -9,6 +9,7 @@
       "endpoint": "/password/hash",
       "method": "POST",
       "backends": [{
+        "group": "password_hash",
         "scheme": "http",
 			  "method": "POST",
 			  "host":   "127.0.0.1:9001",

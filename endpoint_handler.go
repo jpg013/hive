@@ -8,7 +8,11 @@ import (
 )
 
 func EndpointHandler(cfg config.EndpointConfig) echo.HandlerFunc {
-	proxy := ProxyFactory(cfg)
+	proxy, err := ProxyFactory(cfg)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return func(c echo.Context) error {
 		request := NewRequest(c)

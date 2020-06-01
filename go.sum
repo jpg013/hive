@@ -16,6 +16,8 @@ github.com/Code-Pundits/go-config v0.0.3 h1:Xwk6dobmntdUDjIb47faN09ySSOO7EHd7SfA
 github.com/Code-Pundits/go-config v0.0.3/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
 github.com/Code-Pundits/go-config v0.0.4 h1:QGT/hGlKU8Nj0WC0Uw778/VvTxuWiaFA1tplYZ1I95U=
 github.com/Code-Pundits/go-config v0.0.4/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
+github.com/Code-Pundits/go-config v0.0.5 h1:LxfB0fyqsQ4BbvZZXJivifLt2Nz/9C0xZKludwtrSqM=
+github.com/Code-Pundits/go-config v0.0.5/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
 github.com/Code-Pundits/go-logger v0.2.0 h1:XOhZeAUNV65Y5QZLbV4u16lpu7Mfm59VWLgF9ai30Ss=
 github.com/Code-Pundits/go-logger v0.2.0/go.mod h1:dWY+GhQkN6xdUHN37Fe0p2YT2lmeHiHrE9dZ7zv2qt8=
 github.com/DataDog/zstd v1.4.0/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t7BBo=
