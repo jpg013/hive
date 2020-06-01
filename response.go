@@ -2,7 +2,6 @@ package hive
 
 // Response represents the backend remote response object
 type Response struct {
-	Group      string                 `json:"group"`
 	Data       map[string]interface{} `json:"data"`
 	Status     int                    `json:"status"`
 	Errors     map[string]string      `json:"errors"`

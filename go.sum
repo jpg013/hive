@@ -18,6 +18,12 @@ github.com/Code-Pundits/go-config v0.0.4 h1:QGT/hGlKU8Nj0WC0Uw778/VvTxuWiaFA1tpl
 github.com/Code-Pundits/go-config v0.0.4/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
 github.com/Code-Pundits/go-config v0.0.5 h1:LxfB0fyqsQ4BbvZZXJivifLt2Nz/9C0xZKludwtrSqM=
 github.com/Code-Pundits/go-config v0.0.5/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
+github.com/Code-Pundits/go-config v0.0.6-0.20200601143301-4589710a550f h1:SJlzjpf3cTFk5Nk8+oowXW6rvpk5vj8xN9uzyVHnfOw=
+github.com/Code-Pundits/go-config v0.0.6-0.20200601143301-4589710a550f/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
+github.com/Code-Pundits/go-config v0.0.6 h1:dPUIFT9ii+IchF9yfVGo2jieDf5oICLbc5NehGb3H8c=
+github.com/Code-Pundits/go-config v0.0.6/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
+github.com/Code-Pundits/go-config v0.0.7 h1:vIMf0rK4KBbBZbHfey0ppAaGVbkvxRJVdOq9Ca9trI4=
+github.com/Code-Pundits/go-config v0.0.7/go.mod h1:QUUUX9pENVHLKv/St7W79ovMtYz4chX6kdUJdNfmMe0=
 github.com/Code-Pundits/go-logger v0.2.0 h1:XOhZeAUNV65Y5QZLbV4u16lpu7Mfm59VWLgF9ai30Ss=
 github.com/Code-Pundits/go-logger v0.2.0/go.mod h1:dWY+GhQkN6xdUHN37Fe0p2YT2lmeHiHrE9dZ7zv2qt8=
 github.com/DataDog/zstd v1.4.0/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t7BBo=
@@ -172,7 +178,10 @@ golang.org/x/tools v0.0.0-20190425150028-36563e24a262/go.mod h1:RgjU9mgBXZiqYHBn
 golang.org/x/tools v0.0.0-20190506145303-2d16b83fe98c/go.mod h1:RgjU9mgBXZiqYHBnxXauZ1Gv1EHHAz9KjViQ78xBX0Q=
 golang.org/x/tools v0.0.0-20190606124116-d0a3d012864b/go.mod h1:/rFqwRUd4F7ZHNgwSSTFct+R/Kf4OFW1sUzUTQQTgfc=
 golang.org/x/tools v0.0.0-20190628153133-6cdbf07be9d0/go.mod h1:/rFqwRUd4F7ZHNgwSSTFct+R/Kf4OFW1sUzUTQQTgfc=
+golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c h1:IGkKhmfzcztjm6gYkykvu/NiS8kaqbCWAEWWAyf8J5U=
 golang.org/x/tools v0.0.0-20191029041327-9cc4af7d6b2c/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=
+golang.org/x/tools v0.0.0-20200530233709-52effbd89c51 h1:Wec8/IO8hAraBf0it7/dPQYOslIrgM938wZYNkLnOYc=
+golang.org/x/tools v0.0.0-20200601175630-2caf76543d99 h1:deddXmhOJb/bvD/4M/j2AUMrhHeh6GkqykJSCWyTNVk=
 golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 google.golang.org/api v0.4.0/go.mod h1:8k5glujaEP+g9n7WNsDg8QP6cUVNI86fCNMcbazEtwE=
 google.golang.org/api v0.7.0 h1:9sdfJOzWlkqPltHAuzT2Cp+yrBeY1KRVYgms8soxMwM=

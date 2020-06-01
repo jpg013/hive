@@ -1,14 +1,13 @@
 package hive
 
 import (
-	"net/http"
-
 	"github.com/Code-Pundits/go-config"
 	"github.com/labstack/echo/v4"
 )
 
-func EndpointHandler(cfg config.EndpointConfig) echo.HandlerFunc {
+func EndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
 	proxy, err := ProxyFactory(cfg)
+	render := getRender(cfg)
 
 	if err != nil {
 		panic(err)
@@ -22,7 +21,6 @@ func EndpointHandler(cfg config.EndpointConfig) echo.HandlerFunc {
 			return err
 		}
 
-		c.JSON(http.StatusPartialContent, "bitch is this working!")
-		return c.JSON(resp.Status, resp)
+		return render(c, resp)
 	}
 }

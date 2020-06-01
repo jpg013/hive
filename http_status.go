@@ -12,6 +12,8 @@ var httpAllowedStatusCodes map[uint]bool = map[uint]bool{
 	http.StatusCreated: true,
 }
 
+var defaultHTTPStatus int = http.StatusOK
+
 // HTTPResponseError is the error to be returned by the HTTPStatusHandler
 type HTTPResponseError struct {
 	Code int    `json:"http_status_code"`

@@ -1,7 +1,9 @@
 package hive
 
 import (
+	"bytes"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 
@@ -28,7 +30,7 @@ func NewRequest(c echo.Context) *Request {
 	// httpReq.Header
 	return &Request{
 		Method:  req.Method,
-		Body:    req.Body,
+		Body:    cloneRequestBody(req),
 		Headers: cloneRequestHeaders(req),
 	}
 }
@@ -41,6 +43,14 @@ func cloneRequestHeaders(req *http.Request) map[string][]string {
 		headers[k] = tmp
 	}
 	return headers
+}
+
+// Check out https://github.com/golang/go/issues/36095 for how I came by this
+func cloneRequestBody(req *http.Request) io.ReadCloser {
+	var b bytes.Buffer
+	b.ReadFrom(req.Body)
+	req.Body = ioutil.NopCloser(&b)
+	return ioutil.NopCloser(bytes.NewReader(b.Bytes()))
 }
 
 // func (rf *requestFactory) parseHeaders(c echo.Context) map[string][]string {

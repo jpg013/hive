@@ -18,18 +18,21 @@ var (
 	errNoBackend = errors.New("Endpoint must have at least 1 backend")
 )
 
-func multiProxyFactory(remotes []config.BackendConfig) Proxy {
+func multiProxyFactory(remotes []*config.BackendConfig) Proxy {
 	return func(req *Request) (*Response, error) {
 		var wait sync.WaitGroup
 		proxyResponse := NewResponse()
 
 		for _, r := range remotes {
-			go func(remote config.BackendConfig) {
+			go func(remote *config.BackendConfig) {
 				defer func() {
 					wait.Done()
 				}()
 				group := remote.Group
 				httpResp, err := httpClient.Do(buildRemoteRequest(remote, req))
+				if err != nil {
+					panic(err)
+				}
 
 				if err != nil {
 					proxyResponse.Errors[group] = err.Error()
@@ -54,7 +57,6 @@ func multiProxyFactory(remotes []config.BackendConfig) Proxy {
 					proxyResponse.Errors[group] = fmt.Errorf("error parsing http response JSON: %s", err.Error()).Error()
 					return
 				}
-
 				proxyResponse.Data[group] = data
 			}(r)
 			// Add wait counter
@@ -70,7 +72,7 @@ func multiProxyFactory(remotes []config.BackendConfig) Proxy {
 	}
 }
 
-func singleProxyFactory(remote config.BackendConfig) Proxy {
+func singleProxyFactory(remote *config.BackendConfig) Proxy {
 	group := remote.Group
 
 	return func(req *Request) (*Response, error) {
@@ -89,7 +91,6 @@ func singleProxyFactory(remote config.BackendConfig) Proxy {
 		}
 
 		proxyResponse := NewResponse()
-		proxyResponse.Group = remote.Group
 		proxyResponse.Status = httpResp.StatusCode
 
 		var data map[string]interface{}
@@ -110,7 +111,7 @@ func singleProxyFactory(remote config.BackendConfig) Proxy {
 }
 
 // ProxyFactory returns a new Proxy
-func ProxyFactory(cfg config.EndpointConfig) (Proxy, error) {
+func ProxyFactory(cfg *config.EndpointConfig) (Proxy, error) {
 	if len(cfg.Backends) == 0 {
 		return nil, errNoBackend
 	}

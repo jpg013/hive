@@ -10,7 +10,7 @@ import (
 // Hive is the shitz
 type Hive interface {
 	RunServer() error
-	RegisterEndpoint(config.EndpointConfig)
+	RegisterEndpoint(*config.EndpointConfig)
 	LoadConfig(string) error
 }
 
@@ -42,7 +42,7 @@ func (h *hive) RunServer() error {
 	return RunServer(context.Background(), h.config.ServiceConfig, h.router.handler())
 }
 
-func (h *hive) RegisterEndpoint(e config.EndpointConfig) {
+func (h *hive) RegisterEndpoint(e *config.EndpointConfig) {
 	h.router.endpoint(e)
 }
 

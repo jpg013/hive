@@ -3,7 +3,7 @@ module github.com/jpg013/hive
 go 1.13
 
 require (
-	github.com/Code-Pundits/go-config v0.0.5
+	github.com/Code-Pundits/go-config v0.0.7
 	github.com/Code-Pundits/go-logger v0.2.0
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/segmentio/kafka-go v0.3.6 // indirect

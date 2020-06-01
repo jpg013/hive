@@ -6,15 +6,24 @@
   },
   "endpoints": [
     {
-      "endpoint": "/password/hash",
+      "endpoint": "/password",
       "method": "POST",
-      "backends": [{
-        "group": "password_hash",
-        "scheme": "http",
-			  "method": "POST",
-			  "host":   "127.0.0.1:9001",
-			  "path":   "/password/hash"
-      }]
+      "backends": [
+        {
+          "group": "password_hash",
+          "scheme": "http",
+          "method": "POST",
+          "host":   "127.0.0.1:9001",
+          "path":   "/password/hash"
+        },
+        {
+          "group": "password_is_secure",
+          "scheme": "http",
+          "method": "POST",
+          "host":   "127.0.0.1:9001",
+          "path":   "/password/is_secure"
+        }
+      ]
     }
   ]
 }
