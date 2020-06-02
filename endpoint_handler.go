@@ -15,7 +15,7 @@ func EndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		request := NewRequest(c)
-		resp, err := proxy(request)
+		resp := proxy(request)
 
 		if err != nil {
 			return err

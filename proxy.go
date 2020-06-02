@@ -12,101 +12,102 @@ import (
 )
 
 // Proxy processes a request in a given context and returns a response and an error
-type Proxy func(request *ProxyRequest) (*ProxyResponse, error)
+type Proxy func(request *ProxyRequest) *ProxyResponse
 
 var (
 	errNoBackend = errors.New("Endpoint must have at least 1 backend")
 )
 
 func multiProxyFactory(remotes []*config.BackendConfig) Proxy {
-	return func(req *ProxyRequest) (*ProxyResponse, error) {
-		var wait sync.WaitGroup
-		proxyResponse := NewResponse()
+	return func(req *ProxyRequest) *ProxyResponse {
+		// wait group allows us to wait for responses from all the remotes
+		var wg sync.WaitGroup
+		proxyResp := NewProxyResponse()
 
 		for _, r := range remotes {
 			go func(remote *config.BackendConfig) {
 				defer func() {
-					wait.Done()
+					// Always call done on the wait group
+					wg.Done()
 				}()
+
 				group := remote.Group
+				// add the result group to the proxy response
+				proxyResp.AddGroup(group)
+
+				// Build and fire the remote request
 				httpResp, err := httpClient.Do(buildRemoteRequest(remote, req))
 				if err != nil {
-					panic(err)
-				}
-
-				if err != nil {
-					proxyResponse.Errors[group] = err.Error()
+					proxyResp.
+						AddStatus(group, http.StatusInternalServerError).
+						AddError(group, err)
 					return
 				}
 
+				proxyResp.AddStatus(group, httpResp.StatusCode)
 				defer httpResp.Body.Close()
-
 				if err = HTTPStatusHandler(httpResp); err != nil {
-					proxyResponse.Errors[group] = err.Error()
+					proxyResp.AddError(group, err)
 					return
 				}
-
 				var data map[string]interface{}
 				jsonBytes, err := ioutil.ReadAll(httpResp.Body)
 				if err != nil {
-					proxyResponse.Errors[group] = fmt.Errorf("error reading http response: %s", err.Error()).Error()
+					proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
 					return
 				}
 				err = json.Unmarshal(jsonBytes, &data)
 				if err != nil {
-					proxyResponse.Errors[group] = fmt.Errorf("error parsing http response JSON: %s", err.Error()).Error()
-					return
+					if err != nil {
+						proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
+						return
+					}
 				}
-				proxyResponse.Data[group] = data
+
+				proxyResp.AddData(group, data)
 			}(r)
 			// Add wait counter
-			wait.Add(1)
+			wg.Add(1)
 		}
 
-		wait.Wait()
-		// Set the IsComplete flag to true
-		proxyResponse.IsComplete = true
+		wg.Wait()
 		// Always set the http status flag to Status OK for multiple proxy
-		proxyResponse.Status = http.StatusOK
-		return proxyResponse, nil
+		proxyResp.Status = http.StatusOK
+		return proxyResp
 	}
 }
 
 func singleProxyFactory(remote *config.BackendConfig) Proxy {
 	group := remote.Group
 
-	return func(req *ProxyRequest) (*ProxyResponse, error) {
+	return func(req *ProxyRequest) *ProxyResponse {
+		proxyResp := NewProxyResponse()
 		httpResp, err := httpClient.Do(buildRemoteRequest(remote, req))
 
 		if err != nil {
-			return nil, err
+			return proxyResp.
+				AddStatus(group, http.StatusInternalServerError).
+				AddError(group, err)
 		}
 
+		proxyResp.AddStatus(group, httpResp.StatusCode)
 		defer httpResp.Body.Close()
 		if err = HTTPStatusHandler(httpResp); err != nil {
-			return &ProxyResponse{
-				Status: httpResp.StatusCode,
-				Errors: map[string]string{group: err.Error()},
-			}, nil
+			return proxyResp.AddError(group, err)
 		}
-
-		proxyResponse := NewResponse()
-		proxyResponse.Status = httpResp.StatusCode
-
 		var data map[string]interface{}
 		jsonBytes, err := ioutil.ReadAll(httpResp.Body)
 		if err != nil {
-			return nil, err
+			return proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
 		}
 		err = json.Unmarshal(jsonBytes, &data)
 		if err != nil {
-			return nil, err
+			if err != nil {
+				return proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
+			}
 		}
 
-		proxyResponse.Data[group] = data
-		proxyResponse.IsComplete = true
-
-		return proxyResponse, nil
+		return proxyResp.AddData(group, data)
 	}
 }
 
