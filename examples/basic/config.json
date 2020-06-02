@@ -6,6 +6,7 @@
   },
   "endpoints": [
     {
+      "stream_response": true,
       "endpoint": "/password",
       "method": "POST",
       "backends": [

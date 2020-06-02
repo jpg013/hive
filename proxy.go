@@ -58,10 +58,8 @@ func multiProxyFactory(remotes []*config.BackendConfig) Proxy {
 				}
 				err = json.Unmarshal(jsonBytes, &data)
 				if err != nil {
-					if err != nil {
-						proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
-						return
-					}
+					proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
+					return
 				}
 
 				proxyResp.AddData(group, data)
@@ -102,9 +100,7 @@ func singleProxyFactory(remote *config.BackendConfig) Proxy {
 		}
 		err = json.Unmarshal(jsonBytes, &data)
 		if err != nil {
-			if err != nil {
-				return proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
-			}
+			return proxyResp.AddError(group, fmt.Errorf("error reading http response body: %s", err.Error()))
 		}
 
 		return proxyResp.AddData(group, data)
