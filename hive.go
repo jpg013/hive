@@ -5,6 +5,7 @@ import (
 
 	"github.com/Code-Pundits/go-config"
 	logging "github.com/Code-Pundits/go-logger"
+	"github.com/jpg013/hive/transport/http"
 )
 
 // Hive is the shitz
@@ -39,7 +40,7 @@ func (h *hive) LoadConfig(path string) error {
 }
 
 func (h *hive) RunServer() error {
-	return RunServer(context.Background(), h.config.ServiceConfig, h.router.handler())
+	return http.RunServer(context.Background(), h.config.ServiceConfig, h.router.handler())
 }
 
 func (h *hive) RegisterEndpoint(e *config.EndpointConfig) {

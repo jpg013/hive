@@ -1,9 +1,6 @@
 package hive
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/Code-Pundits/go-config"
 	"github.com/labstack/echo/v4"
 )
@@ -29,26 +26,23 @@ func EndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
 }
 
 func StreamingEndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
-	proxyStream, err := ProxyStreamFactory(cfg)
+	return nil
+	// proxyStream, err := ProxyStreamFactory(cfg)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// render := getStreamRender(cfg)
+	// return func(c echo.Context) error {
+	// 	request := NewRequest(c)
+	// 	re := render(c)
 
-	if err != nil {
-		panic(err)
-	}
-
-	return func(c echo.Context) error {
-		request := NewRequest(c)
-		c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		c.Response().WriteHeader(defaultHTTPStatus)
-		enc := json.NewEncoder(c.Response())
-		for chunk := range proxyStream(request) {
-			fmt.Println("What the shit?")
-			if err := enc.Encode(chunk); err != nil {
-				return nil
-			}
-			c.Response().Flush()
-		}
-		return nil
-	}
+	// 	for data := range proxyStream(request) {
+	// 		if err := re(data); err != nil {
+	// 			return err
+	// 		}
+	// 	}
+	// 	return nil
+	// }
 }
 
 func GetHandler(cfg *config.EndpointConfig) echo.HandlerFunc {

@@ -1,4 +1,4 @@
-package hive
+package http
 
 import (
 	"context"

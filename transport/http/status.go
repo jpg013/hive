@@ -1,4 +1,4 @@
-package hive
+package http
 
 import (
 	"bytes"
@@ -7,18 +7,16 @@ import (
 	"net/http"
 )
 
-var httpAllowedStatusCodes map[uint]bool = map[uint]bool{
-	http.StatusOK:      true,
-	http.StatusCreated: true,
-}
-
-var defaultHTTPStatus int = http.StatusOK
-
 // HTTPResponseError is the error to be returned by the HTTPStatusHandler
 type HTTPResponseError struct {
 	Code int    `json:"http_status_code"`
 	Msg  string `json:"http_body,omitempty"`
 	name string
+}
+
+var allowedStatusCodes map[uint]bool = map[uint]bool{
+	http.StatusOK:      true,
+	http.StatusCreated: true,
 }
 
 // Error returns the error message
@@ -38,7 +36,7 @@ func (r HTTPResponseError) StatusCode() int {
 
 // HTTPStatusHandler checks the http.Response for invalid responses
 func HTTPStatusHandler(resp *http.Response) error {
-	_, ok := httpAllowedStatusCodes[uint(resp.StatusCode)]
+	_, ok := allowedStatusCodes[uint(resp.StatusCode)]
 
 	if !ok {
 		body, err := ioutil.ReadAll(resp.Body)
