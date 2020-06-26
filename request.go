@@ -8,7 +8,6 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Code-Pundits/go-config"
 	"github.com/labstack/echo/v4"
 )
 
@@ -57,7 +56,7 @@ func cloneRequestBody(req *http.Request) io.ReadCloser {
 type RequestGeneratorFunc func(*ProxyRequest) *http.Request
 
 // NewRequestGeneratorFactory returns a RequestGeneratorFunc
-func NewRequestGeneratorFactory(cfg *config.BackendConfig) RequestGeneratorFunc {
+func NewRequestGeneratorFactory(cfg *BackendConfig) RequestGeneratorFunc {
 	return func(p *ProxyRequest) *http.Request {
 		reqURL := url.URL{
 			Scheme:   cfg.Scheme,

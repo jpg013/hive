@@ -4,26 +4,21 @@ import (
 	"net/http"
 )
 
-var DefaultOKStatus int = http.StatusOK
-var DefaultErrorStatus int = http.StatusInternalServerError
-
 var defaultClient = &http.Client{}
 
 // Executor exposes a Do method for http request
 type Executor interface {
-	Do(string, *http.Request) *Response
+	Do(*http.Request) (*http.Response, error)
 }
 
 type httpExecutor struct {
 	client *http.Client
 }
 
-func (exec *httpExecutor) Do(group string, req *http.Request) *Response {
-	handler := NewResponseHandler(group)
-
+func (exec *httpExecutor) Do(req *http.Request) (*http.Response, error) {
 	resp, err := exec.client.Do(req)
 
-	return handler(resp, err)
+	return resp, err
 }
 
 func NewExecutor() Executor {

@@ -7,36 +7,36 @@ import (
 	"net/http"
 )
 
-// HTTPResponseError is the error to be returned by the HTTPStatusHandler
-type HTTPResponseError struct {
+// httpResponseError is the error to be returned by the httpStatusHandler
+type httpResponseError struct {
 	Code int    `json:"http_status_code"`
 	Msg  string `json:"http_body,omitempty"`
 	name string
 }
 
-var allowedStatusCodes map[uint]bool = map[uint]bool{
+var httpAllowedStatusCodes map[uint]bool = map[uint]bool{
 	http.StatusOK:      true,
 	http.StatusCreated: true,
 }
 
 // Error returns the error message
-func (r HTTPResponseError) Error() string {
+func (r httpResponseError) Error() string {
 	return r.Msg
 }
 
 // Name returns the name of the error
-func (r HTTPResponseError) Name() string {
+func (r httpResponseError) Name() string {
 	return r.name
 }
 
 // StatusCode returns the status code returned by the backend
-func (r HTTPResponseError) StatusCode() int {
+func (r httpResponseError) StatusCode() int {
 	return r.Code
 }
 
-// HTTPStatusHandler checks the http.Response for invalid responses
-func HTTPStatusHandler(resp *http.Response) error {
-	_, ok := allowedStatusCodes[uint(resp.StatusCode)]
+// StatusHandler checks the http.Response for invalid status
+func StatusHandler(resp *http.Response) error {
+	_, ok := httpAllowedStatusCodes[uint(resp.StatusCode)]
 
 	if !ok {
 		body, err := ioutil.ReadAll(resp.Body)
@@ -47,6 +47,7 @@ func HTTPStatusHandler(resp *http.Response) error {
 
 		// Copy the ReadCloser
 		resp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
 		// Try to parse the message from the body
 		var data map[string]string
 		var msg string
@@ -57,7 +58,7 @@ func HTTPStatusHandler(resp *http.Response) error {
 		if msg == "" {
 			msg = string(body)
 		}
-		return HTTPResponseError{
+		return httpResponseError{
 			Code: resp.StatusCode,
 			Msg:  msg,
 		}

@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Code-Pundits/go-config"
 	logging "github.com/Code-Pundits/go-logger"
 	"github.com/labstack/echo/v4"
 )
@@ -13,7 +12,7 @@ import (
 // Router defines the router interface
 type Router interface {
 	middleware(...echo.MiddlewareFunc)
-	endpoint(*config.EndpointConfig)
+	endpoint(*EndpointConfig)
 	handler() http.Handler
 }
 
@@ -30,20 +29,20 @@ func (r *httpRouter) middleware(fns ...echo.MiddlewareFunc) {
 	}
 }
 
-func (r *httpRouter) endpoint(e *config.EndpointConfig) {
+func (r *httpRouter) endpoint(e *EndpointConfig) {
 	method := strings.ToTitle(e.Method)
 
 	switch method {
 	case http.MethodGet:
-		r.Engine.GET(e.Endpoint, GetHandler(e))
+		r.Engine.GET(e.Endpoint, EndpointHandler(e))
 	case http.MethodPost:
-		r.Engine.POST(e.Endpoint, GetHandler(e))
+		r.Engine.POST(e.Endpoint, EndpointHandler(e))
 	case http.MethodPut:
-		r.Engine.PUT(e.Endpoint, GetHandler(e))
+		r.Engine.PUT(e.Endpoint, EndpointHandler(e))
 	case http.MethodPatch:
-		r.Engine.PATCH(e.Endpoint, GetHandler(e))
+		r.Engine.PATCH(e.Endpoint, EndpointHandler(e))
 	case http.MethodDelete:
-		r.Engine.DELETE(e.Endpoint, GetHandler(e))
+		r.Engine.DELETE(e.Endpoint, EndpointHandler(e))
 	default:
 		r.logger.Error(fmt.Sprintf("Unsuported endpoint method: %s", method))
 	}

@@ -1,11 +1,10 @@
 package hive
 
 import (
-	"github.com/Code-Pundits/go-config"
 	"github.com/labstack/echo/v4"
 )
 
-func EndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
+func EndpointHandler(cfg *EndpointConfig) echo.HandlerFunc {
 	proxy, err := ProxyFactory(cfg)
 	render := getRender(cfg)
 
@@ -15,17 +14,19 @@ func EndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		request := NewRequest(c)
-		resp := proxy(request)
-
-		if err != nil {
-			return err
+		result := make(map[string]*Response)
+		for resp := range proxy(request) {
+			result[resp.Group] = resp
 		}
 
-		return render(c, resp)
+		// Set the context data
+		c.Set("data", result)
+
+		return render(c)
 	}
 }
 
-func StreamingEndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
+func StreamingEndpointHandler(cfg *EndpointConfig) echo.HandlerFunc {
 	return nil
 	// proxyStream, err := ProxyStreamFactory(cfg)
 	// if err != nil {
@@ -43,12 +44,4 @@ func StreamingEndpointHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
 	// 	}
 	// 	return nil
 	// }
-}
-
-func GetHandler(cfg *config.EndpointConfig) echo.HandlerFunc {
-	if cfg.StreamResponse == true {
-		return StreamingEndpointHandler(cfg)
-	}
-
-	return EndpointHandler(cfg)
 }

@@ -3,28 +3,5 @@
     "host": "127.0.0.1",
     "port": 8080,
     "debug": true
-  },
-  "endpoints": [
-    {
-      "stream_response": true,
-      "endpoint": "/password",
-      "method": "POST",
-      "backends": [
-        {
-          "group": "password_hash",
-          "scheme": "http",
-          "method": "POST",
-          "host":   "127.0.0.1:9001",
-          "path":   "/password/hash"
-        },
-        {
-          "group": "password_is_secure",
-          "scheme": "http",
-          "method": "POST",
-          "host":   "127.0.0.1:9001",
-          "path":   "/password/is_secure"
-        }
-      ]
-    }
-  ]
+  }
 }

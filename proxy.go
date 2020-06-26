@@ -3,12 +3,11 @@ package hive
 import (
 	"errors"
 
-	"github.com/Code-Pundits/go-config"
-	client "github.com/jpg013/hive/transport/http"
+	"github.com/jpg013/hive/http"
 )
 
 // Proxy processes a request in a given context and returns a response and an error
-type Proxy func(request *ProxyRequest) *ProxyResult
+type Proxy func(request *ProxyRequest) <-chan *Response
 
 var (
 	errNoBackend = errors.New("Endpoint must have at least 1 backend")
@@ -72,22 +71,26 @@ var (
 // 	}
 // }
 
-func singleProxyFactory(cfg *config.BackendConfig) Proxy {
+func singleProxyFactory(cfg *BackendConfig) Proxy {
 	group := cfg.Group
 	generateRequest := NewRequestGeneratorFactory(cfg)
-	exec := client.NewExecutor()
+	exec := http.NewExecutor()
+	handler := NewResponseHandler(group)
 
-	return func(p *ProxyRequest) *ProxyResult {
-		resp := exec.Do(cfg.Group, generateRequest(p))
-		result := NewProxyResult()
-		result.Data[group] = resp
+	return func(p *ProxyRequest) <-chan *Response {
+		out := make(chan *Response)
 
-		return result
+		go func() {
+			out <- handler(exec.Do(generateRequest(p)))
+			close(out)
+		}()
+
+		return out
 	}
 }
 
 // ProxyFactory returns a new Proxy
-func ProxyFactory(cfg *config.EndpointConfig) (Proxy, error) {
+func ProxyFactory(cfg *EndpointConfig) (Proxy, error) {
 	if len(cfg.Backends) == 0 {
 		return nil, errNoBackend
 	}
